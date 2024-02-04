@@ -31,6 +31,13 @@ use File::Temp qw/ cleanup /;
 use File::Which;
 use Getopt::Long;
 use MP3::Tag;
+
+# `id3v23_unsync` behavior prevents ancient (pre-ID3) MP3 players from playing
+# back ID3 tags as if they were sound. Unfortunately, because an of unclear
+# spec., and because most mp3 tag encoders (like that of lame) avoid unsync,
+# mp3 tag decoders handle the edge cases poorly. They may fail at undoing the
+# unsync bytes, resulting in crashes. Therefore, disable `id3v23_unsync`.
+MP3::Tag->config(id3v23_unsync => 0);
 use Parallel::ForkManager;
 use Scalar::Util qw/ looks_like_number /;
 use FreezeThaw qw/ cmpStr /;
